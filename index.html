@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇮🇹 Italian Verb Flash Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #f5f0e8;
+  --bg2:      #ede8df;
+  --surface:  #fdfaf5;
+  --surface2: #f0ebe2;
+  --border:   rgba(0,0,0,0.10);
+  --red:      #c1121f;
+  --red-dim:  #e63946;
+  --green:    #1a7431;
+  --green-dim:#2dc653;
+  --blue:     #2b4acb;
+  --purple:   #6b21a8;
+  --orange:   #c05e00;
+  --text:     #1a1a1a;
+  --text2:    #5a5550;
+  --text3:    #9a9590;
+  --gold:     #b8860b;
+  --radius:   14px;
+  --radius-sm: 8px;
+  font-size: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(193,18,31,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(26,116,49,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 50% 50%, rgba(43,74,203,0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   CONFETTI CANVAS
+   ============================================================ */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#confetti-canvas.active { opacity: 1; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(253,250,245,0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  animation: slideDown 0.5s ease both;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-flag { font-size: 1.5rem; }
+.logo-text { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; }
+.logo-text span { color: var(--red); }
+
+.mode-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.mode-btn {
+  padding: 7px 16px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.mode-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--red);
+  opacity: 0;
+  transition: opacity 0.25s;
+  border-radius: inherit;
+}
+.mode-btn:hover { color: var(--text); border-color: var(--red); }
+.mode-btn:hover::before { opacity: 0.15; }
+.mode-btn.active {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(230,57,70,0.35);
+}
+.mode-btn.active::before { opacity: 0; }
+
+/* ============================================================
+   FILTER BAR
+   ============================================================ */
+.filter-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 24px;
+  background: rgba(26,26,46,0.6);
+  border-bottom: 1px solid var(--border);
+  animation: slideDown 0.5s 0.1s ease both;
+}
+
+.filter-label { font-size: 0.72rem; color: var(--text3); margin-right: 2px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+.filter-btn {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.filter-btn:hover { border-color: rgba(0,0,0,0.25); color: var(--text); }
+.filter-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+.filter-btn.e-btn.active  { background: var(--blue);   border-color: var(--blue); }
+.filter-btn.h-btn.active  { background: var(--green);  border-color: var(--green); }
+.filter-btn.r-btn.active  { background: var(--purple); border-color: var(--purple); }
+.filter-btn.action { margin-left: auto; }
+
+/* ============================================================
+   PROGRESS & STATS
+   ============================================================ */
+#progress-bar-wrap {
+  height: 3px;
+  background: var(--surface2);
+}
+#progress-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--orange));
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+  box-shadow: 0 0 8px rgba(230,57,70,0.6);
+}
+
+#stats {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  font-size: 0.78rem;
+  color: var(--text3);
+  background: rgba(237,232,223,0.9);
+  border-bottom: 1px solid var(--border);
+  animation: slideDown 0.5s 0.15s ease both;
+  overflow-x: auto;
+}
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+}
+.stat-item:last-child { border-right: none; }
+.stat-icon { font-size: 0.85rem; }
+.stat-val {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 0.85rem;
+  transition: transform 0.2s, color 0.2s;
+  display: inline-block;
+}
+.stat-val.bump {
+  animation: statBump 0.4s ease;
+}
+@keyframes statBump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4); color: var(--gold); }
+  100% { transform: scale(1); }
+}
+
+/* ============================================================
+   MAIN AREA
+   ============================================================ */
+#main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 60px;
+  min-height: calc(100vh - 140px);
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   FLASHCARD
+   ============================================================ */
+.card-scene {
+  width: 100%;
+  max-width: 640px;
+  height: 440px;
+  perspective: 1200px;
+  cursor: pointer;
+  margin: 0 auto;
+  animation: cardEntrance 0.5s ease both;
+}
+@keyframes cardEntrance {
+  from { transform: translateY(30px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+.card-scene.slide-left  { animation: slideLeft  0.35s ease both; }
+.card-scene.slide-right { animation: slideRight 0.35s ease both; }
+@keyframes slideLeft {
+  from { transform: translateX(60px) scale(0.97); opacity: 0; }
+  to   { transform: translateX(0)    scale(1);    opacity: 1; }
+}
+@keyframes slideRight {
+  from { transform: translateX(-60px) scale(0.97); opacity: 0; }
+  to   { transform: translateX(0)     scale(1);    opacity: 1; }
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius);
+}
+.card.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.10),
+    0 1px 0 rgba(255,255,255,0.8) inset;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.card-back { transform: rotateY(180deg); }
+
+/* Colored top stripe */
+.card-stripe {
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--orange));
+  flex-shrink: 0;
+}
+.card-stripe.green  { background: linear-gradient(90deg, var(--green), #00d4aa); }
+.card-stripe.blue   { background: linear-gradient(90deg, var(--blue), #7209b7); }
+.card-stripe.purple { background: linear-gradient(90deg, var(--purple), #e040fb); }
+
+.card-tag {
+  padding: 8px 16px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-front-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 36px 32px;
+  text-align: center;
+  gap: 14px;
+}
+
+.verb-it {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.4rem;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.verb-hint {
+  font-size: 0.88rem;
+  color: var(--text3);
+  font-style: italic;
+}
+
+.flip-hint {
+  font-size: 0.72rem;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.flip-hint::before, .flip-hint::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* AUX BADGES */
+.aux-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.aux-e  { background: rgba(67,97,238,0.2);   color: #6c8ef7; border: 1px solid rgba(67,97,238,0.3); }
+.aux-h  { background: rgba(45,198,83,0.2);   color: #4ddb7a; border: 1px solid rgba(45,198,83,0.3); }
+.aux-b  { background: rgba(247,127,0,0.2);   color: #f79d3a; border: 1px solid rgba(247,127,0,0.3); }
+.aux-r  { background: rgba(123,45,139,0.2);  color: #c06fd4; border: 1px solid rgba(123,45,139,0.3); }
+
+/* CARD BACK */
+.card-back-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px;
+  overflow: auto;
+  gap: 4px;
+}
+.back-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.verb-en {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tense-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin: 8px 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tense-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(230,57,70,0.25);
+}
+
+.conj-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 12px;
+}
+.conj-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.82rem;
+}
+.pron {
+  background: var(--red);
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 40px;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+.pron.noi { background: var(--text3); }
+.conj-form { font-weight: 600; color: var(--text); }
+
+.ex-line {
+  font-size: 0.76rem;
+  color: var(--text2);
+  font-style: italic;
+  margin-top: 4px;
+  padding: 6px 10px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 6px;
+  border-left: 2px solid var(--red);
+}
+.ex-line b { color: var(--red); font-style: normal; }
+
+/* KNOWN BADGE ON CARD */
+.known-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  box-shadow: 0 0 12px rgba(45,198,83,0.5);
+  animation: popIn 0.3s ease;
+  z-index: 10;
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ============================================================
+   NAV ROW
+   ============================================================ */
+.nav-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: 640px;
+  width: 100%;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.nav-btn {
+  padding: 11px 22px;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.nav-btn:active { transform: scale(0.96); }
+.nav-btn.primary  { background: var(--red); color: #fff; box-shadow: 0 4px 15px rgba(230,57,70,0.4); }
+.nav-btn.primary:hover { background: #f04a56; box-shadow: 0 6px 20px rgba(230,57,70,0.5); transform: translateY(-1px); }
+.nav-btn.secondary { background: transparent; border: 1.5px solid var(--red); color: var(--red); }
+.nav-btn.secondary:hover { background: var(--red); color: #fff; }
+.nav-btn.ghost  { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+.nav-btn.ghost:hover { background: var(--surface); color: var(--text); border-color: rgba(0,0,0,0.2); }
+.nav-btn.green  { background: var(--green); color: #fff; box-shadow: 0 4px 15px rgba(45,198,83,0.4); }
+.nav-btn.green:hover { background: #37e563; box-shadow: 0 6px 20px rgba(45,198,83,0.5); transform: translateY(-1px); }
+
+.nav-counter {
+  font-size: 0.82rem;
+  color: var(--text3);
+  padding: 8px 12px;
+  background: var(--surface2);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Keyboard hint */
+.kbd-hints {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 12px;
+  font-size: 0.7rem;
+  color: var(--text3);
+}
+.kbd-hint { display: flex; align-items: center; gap: 4px; }
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text2);
+  min-width: 22px;
+}
+
+/* ============================================================
+   QUIZ MODE
+   ============================================================ */
+.quiz-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  max-width: 640px;
+  width: 100%;
+  overflow: hidden;
+  animation: cardEntrance 0.4s ease both;
+}
+.quiz-header {
+  background: linear-gradient(135deg, var(--red-dim), #7b1a24);
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.quiz-header::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  top: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+}
+.quiz-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #fff;
+  position: relative;
+}
+.quiz-sub {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.8);
+  margin-top: 4px;
+  position: relative;
+}
+.quiz-body { padding: 20px 24px; }
+.quiz-question {
+  font-size: 0.95rem;
+  color: var(--text2);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.quiz-question strong { color: var(--text); font-size: 1.05rem; }
+.quiz-opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.quiz-opt {
+  padding: 13px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  transition: all 0.2s;
+  text-align: left;
+}
+.quiz-opt:hover:not(.disabled) {
+  border-color: var(--red);
+  background: rgba(230,57,70,0.1);
+  transform: translateY(-1px);
+}
+.quiz-opt.correct {
+  border-color: var(--green);
+  background: rgba(45,198,83,0.15);
+  color: var(--green);
+  animation: correctPop 0.4s ease;
+}
+@keyframes correctPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.quiz-opt.wrong {
+  border-color: var(--red);
+  background: rgba(230,57,70,0.1);
+  color: var(--red);
+  animation: shake 0.4s ease;
+}
+.quiz-opt.disabled { cursor: default; }
+
+.quiz-feedback {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+.quiz-feedback.good {
+  background: rgba(45,198,83,0.12);
+  color: var(--green);
+  border: 1px solid rgba(45,198,83,0.25);
+}
+.quiz-feedback.bad {
+  background: rgba(230,57,70,0.1);
+  color: var(--red);
+  border: 1px solid rgba(230,57,70,0.2);
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   MATCH MODE
+   ============================================================ */
+.match-header {
+  max-width: 720px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 16px;
+  color: var(--text2);
+  font-size: 0.9rem;
+  animation: fadeIn 0.4s ease;
+}
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 720px;
+  width: 100%;
+}
+.match-col-label {
+  font-size: 0.7rem;
+  color: var(--text3);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.match-card {
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-align: center;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: cardEntrance 0.4s ease both;
+  color: var(--text);
+}
+.match-card:hover:not(.matched):not(.disabled) {
+  border-color: var(--red);
+  background: rgba(230,57,70,0.1);
+  transform: translateY(-1px);
+}
+.match-card.selected {
+  border-color: var(--red);
+  background: rgba(230,57,70,0.15);
+  box-shadow: 0 0 0 3px rgba(230,57,70,0.2);
+}
+.match-card.matched {
+  border-color: var(--green);
+  background: rgba(45,198,83,0.12);
+  color: var(--green);
+  cursor: default;
+  animation: matchPop 0.4s ease;
+}
+@keyframes matchPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+.match-card.wrong-flash {
+  animation: shake 0.35s ease;
+  border-color: var(--red);
+  background: rgba(230,57,70,0.15);
+}
+
+/* ============================================================
+   SCORE SCREEN
+   ============================================================ */
+.score-screen {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  max-width: 480px;
+  width: 100%;
+  padding: 48px 40px;
+  text-align: center;
+  animation: cardEntrance 0.5s ease both;
+}
+.score-emoji { font-size: 3.5rem; margin-bottom: 16px; }
+.score-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: var(--red);
+  line-height: 1;
+  animation: scoreReveal 0.6s ease both;
+}
+@keyframes scoreReveal {
+  from { transform: scale(0.5); opacity: 0; }
+  50%  { transform: scale(1.1); }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.score-pct  { font-size: 1.2rem; color: var(--text2); margin-top: 8px; }
+.score-label{ font-size: 0.85rem; color: var(--text3); margin-top: 4px; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-8px); }
+  40%     { transform: translateX(8px); }
+  60%     { transform: translateX(-5px); }
+  80%     { transform: translateX(5px); }
+}
+
+/* ============================================================
+   STREAK TOAST
+   ============================================================ */
+.streak-toast {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  background: linear-gradient(135deg, var(--gold), #f97316);
+  color: #1a1000;
+  padding: 10px 20px;
+  border-radius: 32px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 8px 24px rgba(255,214,10,0.4);
+  z-index: 200;
+  animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+@keyframes toastIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+.streak-toast.out {
+  animation: toastOut 0.4s ease forwards;
+}
+@keyframes toastOut {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(120%); opacity: 0; }
+}
+
+/* ============================================================
+   MODE TRANSITION OVERLAY
+   ============================================================ */
+.mode-transition {
+  position: fixed;
+  inset: 0;
+  background: var(--red);
+  z-index: 300;
+  pointer-events: none;
+  clip-path: circle(0% at 50% 50%);
+  transition: clip-path 0.4s ease;
+}
+.mode-transition.reveal {
+  clip-path: circle(150% at 50% 50%);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .verb-it { font-size: 2.4rem; }
+  .card-scene { height: 480px; }
+  .quiz-opts { grid-template-columns: 1fr; }
+  .match-grid { grid-template-columns: 1fr; }
+  .kbd-hints { display: none; }
+  #header { padding: 12px 16px; }
+  .filter-bar { padding: 8px 16px; }
+  #main { padding: 20px 12px 40px; }
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div class="mode-transition" id="modeTransition"></div>
+
+<div id="header">
+  <div class="logo">
+    <span class="logo-flag">🇮🇹</span>
+    <span class="logo-text">Italian <span>Verbs</span></span>
+  </div>
+  <div class="mode-btns">
+    <button class="mode-btn active" onclick="setMode('flashcard',event)">📖 Flashcards</button>
+    <button class="mode-btn" onclick="setMode('quiz',event)">❓ Quiz</button>
+    <button class="mode-btn" onclick="setMode('match',event)">🔗 Match</button>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">Filter:</span>
+  <button class="filter-btn active" onclick="setFilter('all',event)">All (200)</button>
+  <button class="filter-btn h-btn"  onclick="setFilter('h',event)">🟢 Avere</button>
+  <button class="filter-btn e-btn"  onclick="setFilter('e',event)">🔵 Essere</button>
+  <button class="filter-btn r-btn"  onclick="setFilter('r',event)">🟣 Reflexive</button>
+  <button class="filter-btn"        onclick="setFilter('b',event)">🟠 Both</button>
+  <button class="filter-btn action" onclick="shuffleDeck()">🔀 Shuffle</button>
+  <button class="filter-btn"        onclick="resetProgress()">↺ Reset</button>
+</div>
+
+<div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+<div id="stats">
+  <div class="stat-item"><span class="stat-icon">📍</span><span id="stat-cur">1</span>/<span id="stat-tot">200</span></div>
+  <div class="stat-item"><span class="stat-icon">✅</span>Known: <span class="stat-val" id="stat-known">0</span></div>
+  <div class="stat-item"><span class="stat-icon">⭐</span>Streak: <span class="stat-val" id="stat-streak">0</span></div>
+  <div class="stat-item"><span class="stat-icon">🏆</span>Score: <span class="stat-val" id="stat-score">0</span></div>
+</div>
+
+<div id="main"></div>
+
+<script>
+// ============================================================
+// VERB DATA — 200 most common Italian verbs
+// ============================================================
+const V = [
+{v:"essere",e:"to be",a:"e",pp:"stato",pres:["sono","sei","è","siamo","siete","sono"],exIt:"Io <b>sono</b> stanco.",exEn:"I am tired."},
+{v:"stare",e:"to stay / to be",a:"e",pp:"stato",pres:["sto","stai","sta","stiamo","state","stanno"],exIt:"Come <b>stai</b>?",exEn:"How are you?"},
+{v:"andare",e:"to go",a:"e",pp:"andato",pres:["vado","vai","va","andiamo","andate","vanno"],exIt:"Io <b>vado</b> al mercato.",exEn:"I go to the market."},
+{v:"venire",e:"to come",a:"e",pp:"venuto",pres:["vengo","vieni","viene","veniamo","venite","vengono"],exIt:"Lei <b>viene</b> con me.",exEn:"She comes with me."},
+{v:"uscire",e:"to go out",a:"e",pp:"uscito",pres:["esco","esci","esce","usciamo","uscite","escono"],exIt:"Noi <b>usciamo</b> stasera.",exEn:"We go out tonight."},
+{v:"entrare",e:"to enter",a:"e",pp:"entrato",pres:["entro","entri","entra","entriamo","entrate","entrano"],exIt:"Il gatto <b>entra</b> in casa.",exEn:"The cat enters the house."},
+{v:"partire",e:"to leave / depart",a:"e",pp:"partito",pres:["parto","parti","parte","partiamo","partite","partono"],exIt:"Il treno <b>parte</b> alle otto.",exEn:"The train leaves at eight."},
+{v:"arrivare",e:"to arrive",a:"e",pp:"arrivato",pres:["arrivo","arrivi","arriva","arriviamo","arrivate","arrivano"],exIt:"Quando <b>arrivi</b>?",exEn:"When do you arrive?"},
+{v:"tornare",e:"to return / come back",a:"e",pp:"tornato",pres:["torno","torni","torna","torniamo","tornate","tornano"],exIt:"Lui <b>torna</b> tardi.",exEn:"He comes back late."},
+{v:"rimanere",e:"to remain / stay",a:"e",pp:"rimasto",pres:["rimango","rimani","rimane","rimaniamo","rimanete","rimangono"],exIt:"Io <b>rimango</b> a casa.",exEn:"I stay at home."},
+{v:"restare",e:"to stay / remain",a:"e",pp:"restato",pres:["resto","resti","resta","restiamo","restate","restano"],exIt:"Noi <b>restiamo</b> qui.",exEn:"We stay here."},
+{v:"cadere",e:"to fall",a:"e",pp:"caduto",pres:["cado","cadi","cade","cadiamo","cadete","cadono"],exIt:"La foglia <b>cade</b>.",exEn:"The leaf falls."},
+{v:"nascere",e:"to be born",a:"e",pp:"nato",pres:["nasco","nasci","nasce","nasciamo","nascete","nascono"],exIt:"I bambini <b>nascono</b> d'estate.",exEn:"The children are born in summer."},
+{v:"morire",e:"to die",a:"e",pp:"morto",pres:["muoio","muori","muore","moriamo","morite","muoiono"],exIt:"Le foglie <b>muoiono</b> in autunno.",exEn:"The leaves die in autumn."},
+{v:"diventare",e:"to become",a:"e",pp:"diventato",pres:["divento","diventi","diventa","diventiamo","diventate","diventano"],exIt:"Lui <b>diventa</b> medico.",exEn:"He becomes a doctor."},
+{v:"sembrare",e:"to seem / appear",a:"e",pp:"sembrato",pres:["sembro","sembri","sembra","sembriamo","sembrate","sembrano"],exIt:"<b>Sembra</b> stanco.",exEn:"He seems tired."},
+{v:"costare",e:"to cost",a:"e",pp:"costato",pres:["costo","costi","costa","costiamo","costate","costano"],exIt:"Quanto <b>costa</b>?",exEn:"How much does it cost?"},
+{v:"piacere",e:"to like / please",a:"e",pp:"piaciuto",pres:["piaccio","piaci","piace","piacciamo","piacete","piacciono"],exIt:"Mi <b>piace</b> la pizza.",exEn:"I like pizza."},
+{v:"riuscire",e:"to succeed / manage",a:"e",pp:"riuscito",pres:["riesco","riesci","riesce","riusciamo","riuscite","riescono"],exIt:"Non <b>riesco</b> a dormire.",exEn:"I can't manage to sleep."},
+{v:"scendere",e:"to go down / get off",a:"b",pp:"sceso",pres:["scendo","scendi","scende","scendiamo","scendete","scendono"],exIt:"Io <b>scendo</b> le scale.",exEn:"I go down the stairs."},
+{v:"salire",e:"to go up / get on",a:"b",pp:"salito",pres:["salgo","sali","sale","saliamo","salite","salgono"],exIt:"Noi <b>saliamo</b> in cima.",exEn:"We go up to the top."},
+{v:"correre",e:"to run",a:"b",pp:"corso",pres:["corro","corri","corre","corriamo","correte","corrono"],exIt:"Lui <b>corre</b> ogni mattina.",exEn:"He runs every morning."},
+{v:"passare",e:"to pass / spend (time)",a:"b",pp:"passato",pres:["passo","passi","passa","passiamo","passate","passano"],exIt:"Il tempo <b>passa</b> in fretta.",exEn:"Time passes quickly."},
+{v:"vivere",e:"to live",a:"b",pp:"vissuto",pres:["vivo","vivi","vive","viviamo","vivete","vivono"],exIt:"Noi <b>viviamo</b> in Italia.",exEn:"We live in Italy."},
+{v:"crescere",e:"to grow",a:"b",pp:"cresciuto",pres:["cresco","cresci","cresce","cresciamo","crescete","crescono"],exIt:"I bambini <b>crescono</b> in fretta.",exEn:"Children grow quickly."},
+{v:"avere",e:"to have",a:"h",pp:"avuto",pres:["ho","hai","ha","abbiamo","avete","hanno"],exIt:"Io <b>ho</b> due fratelli.",exEn:"I have two brothers."},
+{v:"fare",e:"to do / make",a:"h",pp:"fatto",pres:["faccio","fai","fa","facciamo","fate","fanno"],exIt:"Cosa <b>fai</b> oggi?",exEn:"What are you doing today?"},
+{v:"sapere",e:"to know (a fact)",a:"h",pp:"saputo",pres:["so","sai","sa","sappiamo","sapete","sanno"],exIt:"Io non <b>so</b> la risposta.",exEn:"I don't know the answer."},
+{v:"volere",e:"to want",a:"h",pp:"voluto",pres:["voglio","vuoi","vuole","vogliamo","volete","vogliono"],exIt:"Io <b>voglio</b> un caffè.",exEn:"I want a coffee."},
+{v:"potere",e:"to be able to / can",a:"h",pp:"potuto",pres:["posso","puoi","può","possiamo","potete","possono"],exIt:"<b>Puoi</b> aiutarmi?",exEn:"Can you help me?"},
+{v:"dovere",e:"to have to / must",a:"h",pp:"dovuto",pres:["devo","devi","deve","dobbiamo","dovete","devono"],exIt:"Io <b>devo</b> studiare.",exEn:"I must study."},
+{v:"dire",e:"to say / tell",a:"h",pp:"detto",pres:["dico","dici","dice","diciamo","dite","dicono"],exIt:"Cosa <b>dici</b>?",exEn:"What are you saying?"},
+{v:"dare",e:"to give",a:"h",pp:"dato",pres:["do","dai","dà","diamo","date","danno"],exIt:"Le <b>do</b> un libro.",exEn:"I give her a book."},
+{v:"vedere",e:"to see",a:"h",pp:"visto",pres:["vedo","vedi","vede","vediamo","vedete","vedono"],exIt:"Io <b>vedo</b> le stelle.",exEn:"I see the stars."},
+{v:"prendere",e:"to take",a:"h",pp:"preso",pres:["prendo","prendi","prende","prendiamo","prendete","prendono"],exIt:"<b>Prendi</b> il tuo cappotto.",exEn:"Take your coat."},
+{v:"mettere",e:"to put / place",a:"h",pp:"messo",pres:["metto","metti","mette","mettiamo","mettete","mettono"],exIt:"Dove <b>metti</b> le chiavi?",exEn:"Where do you put the keys?"},
+{v:"trovare",e:"to find",a:"h",pp:"trovato",pres:["trovo","trovi","trova","troviamo","trovate","trovano"],exIt:"Non <b>trovo</b> il telefono.",exEn:"I can't find the phone."},
+{v:"portare",e:"to bring / carry / wear",a:"h",pp:"portato",pres:["porto","porti","porta","portiamo","portate","portano"],exIt:"Lui <b>porta</b> un cappello.",exEn:"He wears a hat."},
+{v:"chiamare",e:"to call",a:"h",pp:"chiamato",pres:["chiamo","chiami","chiama","chiamiamo","chiamate","chiamano"],exIt:"Ti <b>chiamo</b> domani.",exEn:"I'll call you tomorrow."},
+{v:"pensare",e:"to think",a:"h",pp:"pensato",pres:["penso","pensi","pensa","pensiamo","pensate","pensano"],exIt:"A cosa <b>pensi</b>?",exEn:"What are you thinking about?"},
+{v:"lasciare",e:"to leave / let",a:"h",pp:"lasciato",pres:["lascio","lasci","lascia","lasciamo","lasciate","lasciano"],exIt:"<b>Lascia</b> stare!",exEn:"Leave it!"},
+{v:"tenere",e:"to hold / keep",a:"h",pp:"tenuto",pres:["tengo","tieni","tiene","teniamo","tenete","tengono"],exIt:"<b>Tieni</b> la porta aperta.",exEn:"Keep the door open."},
+{v:"parlare",e:"to speak / talk",a:"h",pp:"parlato",pres:["parlo","parli","parla","parliamo","parlate","parlano"],exIt:"Noi <b>parliamo</b> italiano.",exEn:"We speak Italian."},
+{v:"leggere",e:"to read",a:"h",pp:"letto",pres:["leggo","leggi","legge","leggiamo","leggete","leggono"],exIt:"Io <b>leggo</b> un libro.",exEn:"I read a book."},
+{v:"scrivere",e:"to write",a:"h",pp:"scritto",pres:["scrivo","scrivi","scrive","scriviamo","scrivete","scrivono"],exIt:"Lei <b>scrive</b> una lettera.",exEn:"She writes a letter."},
+{v:"mangiare",e:"to eat",a:"h",pp:"mangiato",pres:["mangio","mangi","mangia","mangiamo","mangiate","mangiano"],exIt:"Noi <b>mangiamo</b> la pasta.",exEn:"We eat pasta."},
+{v:"bere",e:"to drink",a:"h",pp:"bevuto",pres:["bevo","bevi","beve","beviamo","bevete","bevono"],exIt:"Lui <b>beve</b> il caffè.",exEn:"He drinks coffee."},
+{v:"dormire",e:"to sleep",a:"h",pp:"dormito",pres:["dormo","dormi","dorme","dormiamo","dormite","dormono"],exIt:"Il bambino <b>dorme</b>.",exEn:"The baby sleeps."},
+{v:"sentire",e:"to hear / feel",a:"h",pp:"sentito",pres:["sento","senti","sente","sentiamo","sentite","sentono"],exIt:"<b>Senti</b> quella musica?",exEn:"Do you hear that music?"},
+{v:"capire",e:"to understand",a:"h",pp:"capito",pres:["capisco","capisci","capisce","capiamo","capite","capiscono"],exIt:"Non <b>capisco</b> la domanda.",exEn:"I don't understand the question."},
+{v:"finire",e:"to finish",a:"h",pp:"finito",pres:["finisco","finisci","finisce","finiamo","finite","finiscono"],exIt:"<b>Finisco</b> alle sei.",exEn:"I finish at six."},
+{v:"aprire",e:"to open",a:"h",pp:"aperto",pres:["apro","apri","apre","apriamo","aprite","aprono"],exIt:"<b>Apri</b> la finestra!",exEn:"Open the window!"},
+{v:"chiudere",e:"to close",a:"h",pp:"chiuso",pres:["chiudo","chiudi","chiude","chiudiamo","chiudete","chiudono"],exIt:"<b>Chiudi</b> la porta.",exEn:"Close the door."},
+{v:"lavorare",e:"to work",a:"h",pp:"lavorato",pres:["lavoro","lavori","lavora","lavoriamo","lavorate","lavorano"],exIt:"Mia madre <b>lavora</b> in banca.",exEn:"My mother works in a bank."},
+{v:"abitare",e:"to live (reside)",a:"h",pp:"abitato",pres:["abito","abiti","abita","abitiamo","abitate","abitano"],exIt:"Io <b>abito</b> a Roma.",exEn:"I live in Rome."},
+{v:"comprare",e:"to buy",a:"h",pp:"comprato",pres:["compro","compri","compra","compriamo","comprate","comprano"],exIt:"Nostra nonna <b>compra</b> quattro doni.",exEn:"Our grandmother buys four gifts."},
+{v:"vendere",e:"to sell",a:"h",pp:"venduto",pres:["vendo","vendi","vende","vendiamo","vendete","vendono"],exIt:"Lui <b>vende</b> frutta.",exEn:"He sells fruit."},
+{v:"aspettare",e:"to wait (for)",a:"h",pp:"aspettato",pres:["aspetto","aspetti","aspetta","aspettiamo","aspettate","aspettano"],exIt:"<b>Aspetta</b> un momento!",exEn:"Wait a moment!"},
+{v:"camminare",e:"to walk",a:"h",pp:"camminato",pres:["cammino","cammini","cammina","camminiamo","camminate","camminano"],exIt:"Io <b>cammino</b> nel parco.",exEn:"I walk in the park."},
+{v:"incontrare",e:"to meet",a:"h",pp:"incontrato",pres:["incontro","incontri","incontra","incontriamo","incontrate","incontrano"],exIt:"Li <b>incontro</b> al bar.",exEn:"I meet them at the café."},
+{v:"conoscere",e:"to know (a person)",a:"h",pp:"conosciuto",pres:["conosco","conosci","conosce","conosciamo","conoscete","conoscono"],exIt:"<b>Conosco</b> bene questa città.",exEn:"I know this city well."},
+{v:"ricordare",e:"to remember",a:"h",pp:"ricordato",pres:["ricordo","ricordi","ricorda","ricordiamo","ricordate","ricordano"],exIt:"Non <b>ricordo</b> il suo nome.",exEn:"I don't remember his name."},
+{v:"dimenticare",e:"to forget",a:"h",pp:"dimenticato",pres:["dimentico","dimentichi","dimentica","dimentichiamo","dimenticate","dimenticano"],exIt:"Io <b>dimentico</b> spesso lo spazzolino.",exEn:"I often forget my toothbrush."},
+{v:"imparare",e:"to learn",a:"h",pp:"imparato",pres:["imparo","impari","impara","impariamo","imparate","imparano"],exIt:"Sto <b>imparando</b> l'italiano.",exEn:"I am learning Italian."},
+{v:"studiare",e:"to study",a:"h",pp:"studiato",pres:["studio","studi","studia","studiamo","studiate","studiano"],exIt:"Loro <b>studiano</b> molto.",exEn:"They study a lot."},
+{v:"insegnare",e:"to teach",a:"h",pp:"insegnato",pres:["insegno","insegni","insegna","insegniamo","insegnate","insegnano"],exIt:"Lei <b>insegna</b> matematica.",exEn:"She teaches mathematics."},
+{v:"aiutare",e:"to help",a:"h",pp:"aiutato",pres:["aiuto","aiuti","aiuta","aiutiamo","aiutate","aiutano"],exIt:"Il padre <b>abbraccia</b> il bambino.",exEn:"The father hugs the boy."},
+{v:"usare",e:"to use",a:"h",pp:"usato",pres:["uso","usi","usa","usiamo","usate","usano"],exIt:"Io <b>uso</b> il computer ogni giorno.",exEn:"I use the computer every day."},
+{v:"cercare",e:"to look for / search",a:"h",pp:"cercato",pres:["cerco","cerchi","cerca","cerchiamo","cercate","cercano"],exIt:"<b>Cerco</b> le mie chiavi.",exEn:"I'm looking for my keys."},
+{v:"guardare",e:"to look at / watch",a:"h",pp:"guardato",pres:["guardo","guardi","guarda","guardiamo","guardate","guardano"],exIt:"Noi <b>guardiamo</b> la TV.",exEn:"We watch TV."},
+{v:"ascoltare",e:"to listen",a:"h",pp:"ascoltato",pres:["ascolto","ascolti","ascolta","ascoltiamo","ascoltate","ascoltano"],exIt:"<b>Ascolta</b> la musica!",exEn:"Listen to the music!"},
+{v:"rispondere",e:"to answer / reply",a:"h",pp:"risposto",pres:["rispondo","rispondi","risponde","rispondiamo","rispondete","rispondono"],exIt:"Non <b>risponde</b> al telefono.",exEn:"He doesn't answer the phone."},
+{v:"chiedere",e:"to ask",a:"h",pp:"chiesto",pres:["chiedo","chiedi","chiede","chiediamo","chiedete","chiedono"],exIt:"Ti <b>chiedo</b> un favore.",exEn:"I'm asking you a favour."},
+{v:"cominciare",e:"to begin / start",a:"h",pp:"cominciato",pres:["comincio","cominci","comincia","cominciamo","cominciate","cominciano"],exIt:"Il film <b>comincia</b> presto.",exEn:"The film starts soon."},
+{v:"continuare",e:"to continue",a:"h",pp:"continuato",pres:["continuo","continui","continua","continuiamo","continuate","continuano"],exIt:"<b>Continua</b> a studiare!",exEn:"Keep studying!"},
+{v:"cambiare",e:"to change",a:"b",pp:"cambiato",pres:["cambio","cambi","cambia","cambiamo","cambiate","cambiano"],exIt:"Il tempo <b>cambia</b> spesso.",exEn:"The weather often changes."},
+{v:"perdere",e:"to lose",a:"h",pp:"perso",pres:["perdo","perdi","perde","perdiamo","perdete","perdono"],exIt:"Non <b>perdere</b> il treno!",exEn:"Don't miss the train!"},
+{v:"vincere",e:"to win",a:"h",pp:"vinto",pres:["vinco","vinci","vince","vinciamo","vincete","vincono"],exIt:"La nostra squadra <b>vince</b>.",exEn:"Our team wins."},
+{v:"giocare",e:"to play (a game/sport)",a:"h",pp:"giocato",pres:["gioco","giochi","gioca","giochiamo","giocate","giocano"],exIt:"I bambini <b>giocano</b> fuori.",exEn:"The children play outside."},
+{v:"cantare",e:"to sing",a:"h",pp:"cantato",pres:["canto","canti","canta","cantiamo","cantate","cantano"],exIt:"Lei <b>canta</b> molto bene.",exEn:"She sings very well."},
+{v:"ballare",e:"to dance",a:"h",pp:"ballato",pres:["ballo","balli","balla","balliamo","ballate","ballano"],exIt:"Loro <b>ballano</b> il tango.",exEn:"They dance the tango."},
+{v:"cucinare",e:"to cook",a:"h",pp:"cucinato",pres:["cucino","cucini","cucina","cuciniamo","cucinate","cucinano"],exIt:"Mia nonna <b>cucina</b> benissimo.",exEn:"My grandmother cooks very well."},
+{v:"pulire",e:"to clean",a:"h",pp:"pulito",pres:["pulisco","pulisci","pulisce","puliamo","pulite","puliscono"],exIt:"Lui <b>pulisce</b> il lavandino.",exEn:"He cleans the bathroom sink."},
+{v:"lavare",e:"to wash",a:"h",pp:"lavato",pres:["lavo","lavi","lava","laviamo","lavate","lavano"],exIt:"Lava i piatti!",exEn:"Wash the dishes!"},
+{v:"guidare",e:"to drive",a:"h",pp:"guidato",pres:["guido","guidi","guida","guidiamo","guidate","guidano"],exIt:"Lei <b>guida</b> una nave grande.",exEn:"She drives a big ship."},
+{v:"viaggiare",e:"to travel",a:"h",pp:"viaggiato",pres:["viaggio","viaggi","viaggia","viaggiamo","viaggiate","viaggiano"],exIt:"Noi <b>viaggiamo</b> in estate.",exEn:"We travel in summer."},
+{v:"pagare",e:"to pay",a:"h",pp:"pagato",pres:["pago","paghi","paga","paghiamo","pagate","pagano"],exIt:"Chi <b>paga</b> il conto?",exEn:"Who pays the bill?"},
+{v:"servire",e:"to serve / need",a:"h",pp:"servito",pres:["servo","servi","serve","serviamo","servite","servono"],exIt:"Ti <b>serve</b> aiuto?",exEn:"Do you need help?"},
+{v:"provare",e:"to try / attempt",a:"h",pp:"provato",pres:["provo","provi","prova","proviamo","provate","provano"],exIt:"<b>Prova</b> questo vestito!",exEn:"Try this dress!"},
+{v:"sperare",e:"to hope",a:"h",pp:"sperato",pres:["spero","speri","spera","speriamo","sperate","sperano"],exIt:"<b>Spero</b> di vederti.",exEn:"I hope to see you."},
+{v:"credere",e:"to believe",a:"h",pp:"creduto",pres:["credo","credi","crede","crediamo","credete","credono"],exIt:"Io non ci <b>credo</b>!",exEn:"I don't believe it!"},
+{v:"decidere",e:"to decide",a:"h",pp:"deciso",pres:["decido","decidi","decide","decidiamo","decidete","decidono"],exIt:"Hai <b>deciso</b> cosa fare?",exEn:"Have you decided what to do?"},
+{v:"promettere",e:"to promise",a:"h",pp:"promesso",pres:["prometto","prometti","promette","promettiamo","promettete","promettono"],exIt:"Te lo <b>prometto</b>!",exEn:"I promise you!"},
+{v:"smettere",e:"to stop (doing sth)",a:"h",pp:"smesso",pres:["smetto","smetti","smette","smettiamo","smettete","smettono"],exIt:"<b>Smetti</b> di fumare!",exEn:"Stop smoking!"},
+{v:"offrire",e:"to offer",a:"h",pp:"offerto",pres:["offro","offri","offre","offriamo","offrite","offrono"],exIt:"Ti <b>offro</b> un caffè.",exEn:"I'll buy you a coffee."},
+{v:"ricevere",e:"to receive",a:"h",pp:"ricevuto",pres:["ricevo","ricevi","riceve","riceviamo","ricevete","ricevono"],exIt:"Ho <b>ricevuto</b> un regalo.",exEn:"I received a gift."},
+{v:"mandare",e:"to send",a:"h",pp:"mandato",pres:["mando","mandi","manda","mandiamo","mandate","mandano"],exIt:"Ti <b>mando</b> un messaggio.",exEn:"I'll send you a message."},
+{v:"regalare",e:"to give as a gift",a:"h",pp:"regalato",pres:["regalo","regali","regala","regaliamo","regalate","regalano"],exIt:"Le <b>regalo</b> dei fiori.",exEn:"I give her flowers as a gift."},
+{v:"spendere",e:"to spend (money)",a:"h",pp:"speso",pres:["spendo","spendi","spende","spendiamo","spendete","spendono"],exIt:"Non <b>spendo</b> troppo.",exEn:"I don't spend too much."},
+{v:"guadagnare",e:"to earn",a:"h",pp:"guadagnato",pres:["guadagno","guadagni","guadagna","guadagniamo","guadagnate","guadagnano"],exIt:"Lui <b>guadagna</b> bene.",exEn:"He earns well."},
+{v:"costruire",e:"to build",a:"h",pp:"costruito",pres:["costruisco","costruisci","costruisce","costruiamo","costruite","costruiscono"],exIt:"<b>Costruiamo</b> una casa.",exEn:"We build a house."},
+{v:"rompere",e:"to break",a:"h",pp:"rotto",pres:["rompo","rompi","rompe","rompiamo","rompete","rompono"],exIt:"Attento a non <b>rompere</b> il vaso!",exEn:"Be careful not to break the vase!"},
+{v:"riparare",e:"to repair / fix",a:"h",pp:"riparato",pres:["riparo","ripari","ripara","ripariamo","riparate","riparano"],exIt:"Il meccanico <b>ripara</b> la macchina.",exEn:"The mechanic fixes the car."},
+{v:"accendere",e:"to turn on / light",a:"h",pp:"acceso",pres:["accendo","accendi","accende","accendiamo","accendete","accendono"],exIt:"<b>Accendi</b> la luce!",exEn:"Turn on the light!"},
+{v:"spegnere",e:"to turn off",a:"h",pp:"spento",pres:["spengo","spegni","spegne","spegniamo","spegnete","spengono"],exIt:"<b>Spegni</b> la TV.",exEn:"Turn off the TV."},
+{v:"alzare",e:"to raise / lift",a:"h",pp:"alzato",pres:["alzo","alzi","alza","alziamo","alzate","alzano"],exIt:"<b>Alza</b> la mano!",exEn:"Raise your hand!"},
+{v:"spingere",e:"to push",a:"h",pp:"spinto",pres:["spingo","spingi","spinge","spingiamo","spingete","spingono"],exIt:"Non <b>spingere</b>!",exEn:"Don't push!"},
+{v:"tirare",e:"to pull / throw",a:"h",pp:"tirato",pres:["tiro","tiri","tira","tiriamo","tirate","tirano"],exIt:"<b>Tira</b> la corda.",exEn:"Pull the rope."},
+{v:"tagliare",e:"to cut",a:"h",pp:"tagliato",pres:["taglio","tagli","taglia","tagliamo","tagliate","tagliano"],exIt:"Lui <b>taglia</b> il pane.",exEn:"He cuts the bread."},
+{v:"dipingere",e:"to paint",a:"h",pp:"dipinto",pres:["dipingo","dipingi","dipinge","dipingiamo","dipingete","dipingono"],exIt:"Lei <b>dipinge</b> un paesaggio.",exEn:"She paints a landscape."},
+{v:"disegnare",e:"to draw",a:"h",pp:"disegnato",pres:["disegno","disegni","disegna","disegniamo","disegnate","disegnano"],exIt:"Il bambino <b>disegna</b> un albero.",exEn:"The child draws a tree."},
+{v:"fotografare",e:"to photograph",a:"h",pp:"fotografato",pres:["fotografo","fotografi","fotografa","fotografiamo","fotografate","fotografano"],exIt:"<b>Fotografo</b> ogni posto.",exEn:"I photograph every place."},
+{v:"suonare",e:"to play (music) / ring",a:"h",pp:"suonato",pres:["suono","suoni","suona","suoniamo","suonate","suonano"],exIt:"Lei <b>suona</b> il violino.",exEn:"She plays the violin."},
+{v:"nuotare",e:"to swim",a:"h",pp:"nuotato",pres:["nuoto","nuoti","nuota","nuotiamo","nuotate","nuotano"],exIt:"Ogni mattina <b>nuoto</b> in piscina.",exEn:"I swim in the pool every morning."},
+{v:"saltare",e:"to jump",a:"h",pp:"saltato",pres:["salto","salti","salta","saltiamo","saltate","saltano"],exIt:"Il gatto <b>salta</b> sul tavolo.",exEn:"The cat jumps on the table."},
+{v:"ridere",e:"to laugh",a:"h",pp:"riso",pres:["rido","ridi","ride","ridiamo","ridete","ridono"],exIt:"Tutti <b>ridono</b> della barzelletta.",exEn:"Everyone laughs at the joke."},
+{v:"piangere",e:"to cry",a:"h",pp:"pianto",pres:["piango","piangi","piange","piangiamo","piangete","piangono"],exIt:"Il bambino <b>piange</b>.",exEn:"The baby cries."},
+{v:"sorridere",e:"to smile",a:"h",pp:"sorriso",pres:["sorrido","sorridi","sorride","sorridiamo","sorridete","sorridono"],exIt:"Lui <b>sorride</b> sempre.",exEn:"He always smiles."},
+{v:"abbracciare",e:"to hug",a:"h",pp:"abbracciato",pres:["abbraccio","abbracci","abbraccia","abbracciamo","abbracciate","abbracciano"],exIt:"Il padre <b>abbraccia</b> il bambino.",exEn:"The father hugs the boy."},
+{v:"baciare",e:"to kiss",a:"h",pp:"baciato",pres:["bacio","baci","bacia","baciamo","baciate","baciano"],exIt:"Li <b>bacia</b> sulla guancia.",exEn:"She kisses them on the cheek."},
+{v:"amare",e:"to love",a:"h",pp:"amato",pres:["amo","ami","ama","amiamo","amate","amano"],exIt:"Ti <b>amo</b>.",exEn:"I love you."},
+{v:"odiare",e:"to hate",a:"h",pp:"odiato",pres:["odio","odi","odia","odiamo","odiate","odiano"],exIt:"<b>Odio</b> il traffico.",exEn:"I hate traffic."},
+{v:"preferire",e:"to prefer",a:"h",pp:"preferito",pres:["preferisco","preferisci","preferisce","preferiamo","preferite","preferiscono"],exIt:"<b>Preferisco</b> il tè al caffè.",exEn:"I prefer tea to coffee."},
+{v:"scegliere",e:"to choose",a:"h",pp:"scelto",pres:["scelgo","scegli","sceglie","scegliamo","scegliete","scelgono"],exIt:"Puoi <b>scegliere</b> un dolce.",exEn:"You can choose a dessert."},
+{v:"ringraziare",e:"to thank",a:"h",pp:"ringraziato",pres:["ringrazio","ringrazi","ringrazia","ringraziamo","ringraziate","ringraziano"],exIt:"Ti <b>ringrazio</b> tanto!",exEn:"Thank you so much!"},
+{v:"invitare",e:"to invite",a:"h",pp:"invitato",pres:["invito","inviti","invita","invitiamo","invitate","invitano"],exIt:"Vi <b>invito</b> a cena.",exEn:"I invite you to dinner."},
+{v:"visitare",e:"to visit",a:"h",pp:"visitato",pres:["visito","visiti","visita","visitiamo","visitate","visitano"],exIt:"<b>Visitiamo</b> il museo.",exEn:"We visit the museum."},
+{v:"scoprire",e:"to discover",a:"h",pp:"scoperto",pres:["scopro","scopri","scopre","scopriamo","scoprite","scoprono"],exIt:"Ho <b>scoperto</b> un ristorante nuovo.",exEn:"I discovered a new restaurant."},
+{v:"creare",e:"to create",a:"h",pp:"creato",pres:["creo","crei","crea","creiamo","create","creano"],exIt:"<b>Creo</b> arte ogni giorno.",exEn:"I create art every day."},
+{v:"organizzare",e:"to organise",a:"h",pp:"organizzato",pres:["organizzo","organizzi","organizza","organizziamo","organizzate","organizzano"],exIt:"Lui <b>organizza</b> la festa.",exEn:"He organises the party."},
+{v:"preparare",e:"to prepare",a:"h",pp:"preparato",pres:["preparo","prepari","prepara","prepariamo","preparate","preparano"],exIt:"Noi <b>prepariamo</b> il pranzo.",exEn:"We prepare lunch."},
+{v:"ordinare",e:"to order",a:"h",pp:"ordinato",pres:["ordino","ordini","ordina","ordiniamo","ordinate","ordinano"],exIt:"<b>Ordino</b> una pizza.",exEn:"I order a pizza."},
+{v:"prenotare",e:"to book / reserve",a:"h",pp:"prenotato",pres:["prenoto","prenoti","prenota","prenotiamo","prenotate","prenotano"],exIt:"Ho <b>prenotato</b> un tavolo.",exEn:"I booked a table."},
+{v:"toccare",e:"to touch",a:"h",pp:"toccato",pres:["tocco","tocchi","tocca","tocchiamo","toccate","toccano"],exIt:"Non <b>toccare</b> i fiori!",exEn:"Don't touch the flowers!"},
+{v:"raccogliere",e:"to pick up / collect",a:"h",pp:"raccolto",pres:["raccolgo","raccogli","raccoglie","raccogliamo","raccogliete","raccolgono"],exIt:"<b>Raccoglie</b> i fiori nel campo.",exEn:"She picks flowers in the field."},
+{v:"lanciare",e:"to throw / launch",a:"h",pp:"lanciato",pres:["lancio","lanci","lancia","lanciamo","lanciate","lanciano"],exIt:"Lui <b>lancia</b> la palla.",exEn:"He throws the ball."},
+{v:"colpire",e:"to hit / strike",a:"h",pp:"colpito",pres:["colpisco","colpisci","colpisce","colpiamo","colpite","colpiscono"],exIt:"La notizia ci ha <b>colpito</b>.",exEn:"The news struck us."},
+{v:"sognare",e:"to dream",a:"h",pp:"sognato",pres:["sogno","sogni","sogna","sogniamo","sognate","sognano"],exIt:"Lui <b>sogna</b> di guidare una nave.",exEn:"He dreams of driving a big ship."},
+{v:"urlare",e:"to shout / scream",a:"h",pp:"urlato",pres:["urlo","urli","urla","urliamo","urlate","urlano"],exIt:"Non <b>urlare</b> in casa!",exEn:"Don't shout inside!"},
+{v:"perdonare",e:"to forgive",a:"h",pp:"perdonato",pres:["perdono","perdoni","perdona","perdoniamo","perdonate","perdonano"],exIt:"Ti <b>perdono</b>.",exEn:"I forgive you."},
+{v:"salutare",e:"to greet / say goodbye",a:"h",pp:"salutato",pres:["saluto","saluti","saluta","salutiamo","salutate","salutano"],exIt:"<b>Saluta</b> tua madre!",exEn:"Say hello to your mother!"},
+{v:"spiegare",e:"to explain",a:"h",pp:"spiegato",pres:["spiego","spieghi","spiega","spieghiamo","spiegate","spiegano"],exIt:"Il professore <b>spiega</b> la lezione.",exEn:"The teacher explains the lesson."},
+{v:"ripetere",e:"to repeat",a:"h",pp:"ripetuto",pres:["ripeto","ripeti","ripete","ripetiamo","ripetete","ripetono"],exIt:"<b>Ripeti</b> la domanda.",exEn:"Repeat the question."},
+{v:"indicare",e:"to indicate / point",a:"h",pp:"indicato",pres:["indico","indichi","indica","indichiamo","indicate","indicano"],exIt:"<b>Indica</b> la strada.",exEn:"Point to the road."},
+{v:"mostrare",e:"to show",a:"h",pp:"mostrato",pres:["mostro","mostri","mostra","mostriamo","mostrate","mostrano"],exIt:"Ti <b>mostro</b> come si fa.",exEn:"I'll show you how it's done."},
+{v:"nascondere",e:"to hide",a:"h",pp:"nascosto",pres:["nascondo","nascondi","nasconde","nascondiamo","nascondete","nascondono"],exIt:"Il bambino si <b>nasconde</b>.",exEn:"The child hides."},
+{v:"rubare",e:"to steal",a:"h",pp:"rubato",pres:["rubo","rubi","ruba","rubiamo","rubate","rubano"],exIt:"Qualcuno ha <b>rubato</b> la mia bici.",exEn:"Someone stole my bike."},
+{v:"distruggere",e:"to destroy",a:"h",pp:"distrutto",pres:["distruggo","distruggi","distrugge","distruggiamo","distruggete","distruggono"],exIt:"L'incendio ha <b>distrutto</b> la casa.",exEn:"The fire destroyed the house."},
+{v:"volare",e:"to fly",a:"h",pp:"volato",pres:["volo","voli","vola","voliamo","volate","volano"],exIt:"Gli uccelli <b>volano</b> nel cielo.",exEn:"The birds fly in the sky."},
+{v:"risolvere",e:"to solve",a:"h",pp:"risolto",pres:["risolvo","risolvi","risolve","risolviamo","risolvete","risolvono"],exIt:"<b>Risolviamo</b> il problema.",exEn:"We solve the problem."},
+{v:"aggiungere",e:"to add",a:"h",pp:"aggiunto",pres:["aggiungo","aggiungi","aggiunge","aggiungiamo","aggiungete","aggiungono"],exIt:"<b>Aggiungi</b> il sale.",exEn:"Add the salt."},
+{v:"correggere",e:"to correct",a:"h",pp:"corretto",pres:["correggo","correggi","corregge","correggiamo","correggete","correggono"],exIt:"La maestra <b>corregge</b> i compiti.",exEn:"The teacher corrects the homework."},
+{v:"soffrire",e:"to suffer",a:"h",pp:"sofferto",pres:["soffro","soffri","soffre","soffriamo","soffrite","soffrono"],exIt:"Non voglio che tu <b>soffra</b>.",exEn:"I don't want you to suffer."},
+{v:"sorprendere",e:"to surprise",a:"h",pp:"sorpreso",pres:["sorprendo","sorprendi","sorprende","sorprendiamo","sorprendete","sorprendono"],exIt:"Il regalo mi ha <b>sorpreso</b>.",exEn:"The gift surprised me."},
+{v:"permettere",e:"to allow / permit",a:"h",pp:"permesso",pres:["permetto","permetti","permette","permettiamo","permettete","permettono"],exIt:"Non è <b>permesso</b> fumare qui.",exEn:"Smoking is not allowed here."},
+{v:"tradurre",e:"to translate",a:"h",pp:"tradotto",pres:["traduco","traduci","traduce","traduciamo","traducete","traducono"],exIt:"<b>Traduco</b> il testo in inglese.",exEn:"I translate the text into English."},
+{v:"dimostrare",e:"to demonstrate / show",a:"h",pp:"dimostrato",pres:["dimostro","dimostri","dimostra","dimostriamo","dimostrate","dimostrano"],exIt:"<b>Dimostra</b> il tuo talento.",exEn:"Show your talent."},
+{v:"analizzare",e:"to analyse",a:"h",pp:"analizzato",pres:["analizzo","analizzi","analizza","analizziamo","analizzate","analizzano"],exIt:"<b>Analizziamo</b> i dati.",exEn:"We analyse the data."},
+{v:"calcolare",e:"to calculate",a:"h",pp:"calcolato",pres:["calcolo","calcoli","calcola","calcoliamo","calcolate","calcolano"],exIt:"<b>Calcola</b> il totale.",exEn:"Calculate the total."},
+{v:"misurare",e:"to measure",a:"h",pp:"misurato",pres:["misuro","misuri","misura","misuriamo","misurate","misurano"],exIt:"<b>Misura</b> la stanza.",exEn:"Measure the room."},
+{v:"verificare",e:"to verify / check",a:"h",pp:"verificato",pres:["verifico","verifichi","verifica","verifichiamo","verificate","verificano"],exIt:"<b>Verifica</b> le informazioni.",exEn:"Verify the information."},
+{v:"controllare",e:"to check / control",a:"h",pp:"controllato",pres:["controllo","controlli","controlla","controlliamo","controllate","controllano"],exIt:"<b>Controlla</b> la temperatura.",exEn:"Check the temperature."},
+{v:"consegnare",e:"to deliver / hand in",a:"h",pp:"consegnato",pres:["consegno","consegni","consegna","consegniamo","consegnate","consegnano"],exIt:"<b>Consegna</b> i compiti!",exEn:"Hand in the homework!"},
+{v:"caricare",e:"to upload / load / charge",a:"h",pp:"caricato",pres:["carico","carichi","carica","carichiamo","caricate","caricano"],exIt:"<b>Carica</b> le foto!",exEn:"Upload the photos!"},
+{v:"scaricare",e:"to download / unload",a:"h",pp:"scaricato",pres:["scarico","scarichi","scarica","scarichiamo","scaricate","scaricano"],exIt:"<b>Scarico</b> la musica.",exEn:"I download the music."},
+{v:"spedire",e:"to send / ship",a:"h",pp:"spedito",pres:["spedisco","spedisci","spedisce","spediamo","spedite","spediscono"],exIt:"<b>Spedisco</b> un pacco.",exEn:"I send a parcel."},
+{v:"firmare",e:"to sign",a:"h",pp:"firmato",pres:["firmo","firmi","firma","firmiamo","firmate","firmano"],exIt:"<b>Firma</b> qui, per favore.",exEn:"Sign here, please."},
+{v:"realizzare",e:"to realise / achieve",a:"h",pp:"realizzato",pres:["realizzo","realizzi","realizza","realizziamo","realizzate","realizzano"],exIt:"Ho <b>realizzato</b> il mio sogno.",exEn:"I achieved my dream."},
+{v:"copiare",e:"to copy",a:"h",pp:"copiato",pres:["copio","copi","copia","copiamo","copiate","copiano"],exIt:"Non <b>copiare</b>!",exEn:"Don't copy!"},
+{v:"alzarsi",e:"to get up",a:"r",pp:"alzato",pres:["mi alzo","ti alzi","si alza","ci alziamo","vi alzate","si alzano"],exIt:"Mi <b>alzo</b> alle sette.",exEn:"I get up at seven."},
+{v:"svegliarsi",e:"to wake up",a:"r",pp:"svegliato",pres:["mi sveglio","ti svegli","si sveglia","ci svegliamo","vi svegliate","si svegliano"],exIt:"Mi <b>sveglio</b> presto.",exEn:"I wake up early."},
+{v:"addormentarsi",e:"to fall asleep",a:"r",pp:"addormentato",pres:["mi addormento","ti addormenti","si addormenta","ci addormentiamo","vi addormentate","si addormentano"],exIt:"Mi <b>addormento</b> subito.",exEn:"I fall asleep immediately."},
+{v:"vestirsi",e:"to get dressed",a:"r",pp:"vestito",pres:["mi vesto","ti vesti","si veste","ci vestiamo","vi vestite","si vestono"],exIt:"Mi <b>vesto</b> in fretta.",exEn:"I get dressed quickly."},
+{v:"lavarsi",e:"to wash oneself",a:"r",pp:"lavato",pres:["mi lavo","ti lavi","si lava","ci laviamo","vi lavate","si lavano"],exIt:"Mi <b>lavo</b> i denti.",exEn:"I brush my teeth."},
+{v:"sedersi",e:"to sit down",a:"r",pp:"seduto",pres:["mi siedo","ti siedi","si siede","ci sediamo","vi sedete","si siedono"],exIt:"Si <b>siede</b> al tavolo.",exEn:"He sits down at the table."},
+{v:"fermarsi",e:"to stop (oneself)",a:"r",pp:"fermato",pres:["mi fermo","ti fermi","si ferma","ci fermiamo","vi fermate","si fermano"],exIt:"Il treno si <b>ferma</b> qui.",exEn:"The train stops here."},
+{v:"chiamarsi",e:"to be called",a:"r",pp:"chiamato",pres:["mi chiamo","ti chiami","si chiama","ci chiamiamo","vi chiamate","si chiamano"],exIt:"Come ti <b>chiami</b>?",exEn:"What is your name?"},
+{v:"innamorarsi",e:"to fall in love",a:"r",pp:"innamorato",pres:["mi innamoro","ti innamori","si innamora","ci innamoriamo","vi innamorate","si innamorano"],exIt:"Si <b>innamora</b> facilmente.",exEn:"She falls in love easily."},
+{v:"sposarsi",e:"to get married",a:"r",pp:"sposato",pres:["mi sposo","ti sposi","si sposa","ci sposiamo","vi sposate","si sposano"],exIt:"Si <b>sposano</b> a giugno.",exEn:"They get married in June."},
+{v:"divertirsi",e:"to have fun",a:"r",pp:"divertito",pres:["mi diverto","ti diverti","si diverte","ci divertiamo","vi divertite","si divertono"],exIt:"Mi <b>diverto</b> molto!",exEn:"I'm having so much fun!"},
+{v:"preoccuparsi",e:"to worry",a:"r",pp:"preoccupato",pres:["mi preoccupo","ti preoccupi","si preoccupa","ci preoccupiamo","vi preoccupate","si preoccupano"],exIt:"Non ti <b>preoccupare</b>!",exEn:"Don't worry!"},
+{v:"ricordarsi",e:"to remember",a:"r",pp:"ricordato",pres:["mi ricordo","ti ricordi","si ricorda","ci ricordiamo","vi ricordate","si ricordano"],exIt:"Ti <b>ricordi</b> di me?",exEn:"Do you remember me?"},
+{v:"sbagliarsi",e:"to be wrong / make a mistake",a:"r",pp:"sbagliato",pres:["mi sbaglio","ti sbagli","si sbaglia","ci sbagliamo","vi sbagliate","si sbagliano"],exIt:"Mi <b>sbaglio</b> spesso.",exEn:"I often make mistakes."},
+{v:"prepararsi",e:"to get ready",a:"r",pp:"preparato",pres:["mi preparo","ti prepari","si prepara","ci prepariamo","vi preparate","si preparano"],exIt:"Mi <b>preparo</b> in cinque minuti.",exEn:"I get ready in five minutes."},
+{v:"riposarsi",e:"to rest",a:"r",pp:"riposato",pres:["mi riposo","ti riposi","si riposa","ci riposiamo","vi riposate","si riposano"],exIt:"Si <b>riposa</b> dopo pranzo.",exEn:"She rests after lunch."},
+{v:"sentirsi",e:"to feel",a:"r",pp:"sentito",pres:["mi sento","ti senti","si sente","ci sentiamo","vi sentite","si sentono"],exIt:"Come ti <b>senti</b>?",exEn:"How do you feel?"},
+{v:"trovarsi",e:"to be located / find oneself",a:"r",pp:"trovato",pres:["mi trovo","ti trovi","si trova","ci troviamo","vi trovate","si trovano"],exIt:"Dove si <b>trova</b> il museo?",exEn:"Where is the museum located?"},
+{v:"pettinarsi",e:"to comb one's hair",a:"r",pp:"pettinato",pres:["mi pettino","ti pettini","si pettina","ci pettiniamo","vi pettinate","si pettinano"],exIt:"Si <b>pettina</b> davanti allo specchio.",exEn:"She combs her hair in front of the mirror."},
+{v:"truccarsi",e:"to put on makeup",a:"r",pp:"truccato",pres:["mi trucco","ti trucchi","si trucca","ci trucchiamo","vi truccate","si truccano"],exIt:"Si <b>trucca</b> ogni mattina.",exEn:"She puts on makeup every morning."},
+{v:"scusarsi",e:"to apologise",a:"r",pp:"scusato",pres:["mi scuso","ti scusi","si scusa","ci scusiamo","vi scusate","si scusano"],exIt:"Mi <b>scuso</b> per il ritardo.",exEn:"I apologise for the delay."},
+{v:"muoversi",e:"to move",a:"r",pp:"mosso",pres:["mi muovo","ti muovi","si muove","ci muoviamo","vi muovete","si muovono"],exIt:"Non ti <b>muovere</b>!",exEn:"Don't move!"},
+{v:"accorgersi",e:"to notice / realise",a:"r",pp:"accorto",pres:["mi accorgo","ti accorgi","si accorge","ci accorgiamo","vi accorgete","si accorgono"],exIt:"Non me ne <b>sono accorto</b>.",exEn:"I didn't notice it."},
+{v:"abituarsi",e:"to get used to",a:"r",pp:"abituato",pres:["mi abituo","ti abitui","si abitua","ci abituiamo","vi abituate","si abituano"],exIt:"Mi <b>abituo</b> al freddo.",exEn:"I'm getting used to the cold."}
+];
+
+const seen = new Set();
+const VERBS = V.filter(x => { if(seen.has(x.v)) return false; seen.add(x.v); return true; });
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  mode: 'flashcard',
+  filter: 'all',
+  deck: [...VERBS],
+  idx: 0,
+  flipped: false,
+  score: 0,
+  known: new Set(),
+  streak: 0,
+  quizPhase: 'question',
+  quizOpts: [],
+  quizCorrectIdx: -1,
+  quizCorrectAns: '',
+  quizSelected: -1,
+  quizTense: 'pres',
+  quizPronIdx: 0,
+  matchCards: [],
+  matchPairs: [],
+  matchSelected: null,
+  matchDone: new Set(),
+  matchWrong: new Set(),
+  navDir: 'right'
+};
+
+// ============================================================
+// CONFETTI
+// ============================================================
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+let confettiPieces = [];
+let confettiAF = null;
+
+function launchConfetti() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.classList.add('active');
+  const colors = ['#e63946','#2dc653','#4361ee','#ffd60a','#f77f00','#ff69b4'];
+  confettiPieces = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 100,
+    r: 5 + Math.random() * 8,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    vx: (Math.random()-0.5)*4,
+    vy: 2 + Math.random()*5,
+    va: (Math.random()-0.5)*0.2,
+    angle: Math.random()*Math.PI*2,
+    shape: Math.random() > 0.5 ? 'circle' : 'rect'
+  }));
+  if (confettiAF) cancelAnimationFrame(confettiAF);
+  animateConfetti();
+  setTimeout(() => {
+    canvas.classList.remove('active');
+    confettiPieces = [];
+  }, 3000);
+}
+
+function animateConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  confettiPieces = confettiPieces.filter(p => p.y < canvas.height + 20);
+  confettiPieces.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.angle += p.va; p.vy += 0.05;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.angle);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = 0.9;
+    if (p.shape === 'circle') {
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI*2);
+      ctx.fill();
+    } else {
+      ctx.fillRect(-p.r, -p.r/2, p.r*2, p.r);
+    }
+    ctx.restore();
+  });
+  if (confettiPieces.length > 0) confettiAF = requestAnimationFrame(animateConfetti);
+}
+
+// ============================================================
+// STREAK TOAST
+// ============================================================
+let toastTimeout = null;
+function showStreakToast(streak) {
+  let existing = document.querySelector('.streak-toast');
+  if (existing) existing.remove();
+  if (toastTimeout) clearTimeout(toastTimeout);
+
+  const msgs = {5:'🔥 5 streak!', 10:'⚡ 10 streak!', 20:'🌟 20 streak!', 50:'👑 50 streak!'};
+  const msg = msgs[streak];
+  if (!msg) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'streak-toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  if (streak >= 10) launchConfetti();
+  toastTimeout = setTimeout(() => {
+    toast.classList.add('out');
+    setTimeout(() => toast.remove(), 400);
+  }, 2200);
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+const PRONOUNS = ['io','tu','lei/lui','noi','voi','loro'];
+const AUX_AVERE  = ['ho','hai','ha','abbiamo','avete','hanno'];
+const AUX_ESSERE = ['sono','sei','è','siamo','siete','sono'];
+const AUX_REF    = ['mi sono','ti sei','si è','ci siamo','vi siete','si sono'];
+
+function getPPForm(pp, idx) {
+  const base = pp.slice(0,-1);
+  if (idx < 3) return pp + '/a';
+  else return base + 'i/e';
+}
+
+function buildPPRows(verb) {
+  let auxArr = verb.a === 'r' ? AUX_REF : (verb.a === 'e' || verb.a === 'b') ? AUX_ESSERE : AUX_AVERE;
+  return PRONOUNS.map((pron, i) => ({
+    pron,
+    form: verb.a === 'h' ? auxArr[i]+' '+verb.pp : auxArr[i]+' '+getPPForm(verb.pp, i)
+  }));
+}
+
+function auxLabel(a) {
+  const map = {
+    h: '<span class="aux-badge aux-h">🟢 Avere</span>',
+    e: '<span class="aux-badge aux-e">🔵 Essere</span>',
+    b: '<span class="aux-badge aux-b">🟠 Both</span>',
+    r: '<span class="aux-badge aux-r">🟣 Reflexive</span>'
+  };
+  return map[a] || '';
+}
+
+function tagLabel(a) {
+  return {h:'🟢 Avere',e:'🔵 Essere',b:'🟠 Both',r:'🟣 Reflexive'}[a] || '';
+}
+
+function stripeClass(a) {
+  return {h:'green',e:'blue',b:'',r:'purple'}[a] || '';
+}
+
+// ============================================================
+// FILTER / MODE / SHUFFLE / RESET
+// ============================================================
+function filteredDeck() {
+  if (state.filter === 'all') return [...VERBS];
+  return VERBS.filter(v => v.a === state.filter);
+}
+
+function setFilter(f, e) {
+  state.filter = f;
+  state.deck = filteredDeck();
+  state.idx = 0; state.flipped = false; state.quizPhase = 'question';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (e) e.target.classList.add('active');
+  if (state.mode === 'quiz') generateQuiz();
+  if (state.mode === 'match') generateMatch();
+  render();
+}
+
+function setMode(m, e) {
+  if (m === state.mode) return;
+  const overlay = document.getElementById('modeTransition');
+  overlay.style.clipPath = 'circle(0% at 50% 50%)';
+  overlay.style.transition = 'none';
+  requestAnimationFrame(() => {
+    overlay.style.transition = 'clip-path 0.35s ease';
+    overlay.style.clipPath = 'circle(150% at 50% 50%)';
+    setTimeout(() => {
+      state.mode = m;
+      state.flipped = false;
+      state.idx = 0;
+      state.quizPhase = 'question';
+      state.matchCards = [];
+      state.matchSelected = null;
+      state.matchDone = new Set();
+      state.matchWrong = new Set();
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      if (e) e.target.classList.add('active');
+      if (m === 'quiz') generateQuiz();
+      if (m === 'match') generateMatch();
+      render();
+      overlay.style.transition = 'clip-path 0.3s ease';
+      overlay.style.clipPath = 'circle(0% at 50% 50%)';
+    }, 200);
+  });
+}
+
+function shuffleDeck() {
+  for (let i = state.deck.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [state.deck[i],state.deck[j]] = [state.deck[j],state.deck[i]];
+  }
+  state.idx = 0; state.flipped = false;
+  render();
+}
+
+function resetProgress() {
+  state.known = new Set(); state.score = 0; state.streak = 0;
+  state.idx = 0; state.flipped = false;
+  render();
+}
+
+// ============================================================
+// STATS UPDATE
+// ============================================================
+function bumpStat(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+}
+
+function updateStats() {
+  const cur = state.idx + 1;
+  const tot = state.deck.length;
+  document.getElementById('stat-cur').textContent = cur;
+  document.getElementById('stat-tot').textContent = tot;
+  const knownEl = document.getElementById('stat-known');
+  const streakEl = document.getElementById('stat-streak');
+  const scoreEl  = document.getElementById('stat-score');
+  if (knownEl.textContent  !== String(state.known.size))  { knownEl.textContent  = state.known.size;  bumpStat('stat-known'); }
+  if (streakEl.textContent !== String(state.streak))      { streakEl.textContent = state.streak;       bumpStat('stat-streak'); }
+  if (scoreEl.textContent  !== String(state.score))       { scoreEl.textContent  = state.score;        bumpStat('stat-score'); }
+  document.getElementById('progress-bar').style.width = (cur/tot*100)+'%';
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
+  updateStats();
+  if (state.mode === 'flashcard') renderFlashcard();
+  else if (state.mode === 'quiz') renderQuiz();
+  else if (state.mode === 'match') renderMatch();
+}
+
+// ============================================================
+// FLASHCARD
+// ============================================================
+function renderFlashcard() {
+  const v = state.deck[state.idx];
+  if (!v) return;
+
+  const presRows = v.pres.map((f,i) => `
+    <div class="conj-row">
+      <span class="pron ${i>=3?'noi':''}">${PRONOUNS[i]}</span>
+      <span class="conj-form">${f}</span>
+    </div>`).join('');
+
+  const ppData = buildPPRows(v);
+  const ppRows = ppData.map((r,i) => `
+    <div class="conj-row">
+      <span class="pron ${i>=3?'noi':''}">${r.pron}</span>
+      <span class="conj-form">${r.form}</span>
+    </div>`).join('');
+
+  const sc = stripeClass(v.a);
+  const isKnown = state.known.has(v.v);
+
+  document.getElementById('main').innerHTML = `
+    <div class="card-scene ${state.navDir === 'left' ? 'slide-left' : 'slide-right'}" onclick="flipCard()">
+      <div class="card ${state.flipped?'flipped':''}">
+
+        <div class="card-face">
+          <div class="card-stripe ${sc}"></div>
+          <div class="card-tag">
+            <span>${tagLabel(v.a)}</span>
+            <span>Presente &amp; Passato Prossimo</span>
+          </div>
+          ${isKnown ? '<div class="known-badge" title="Known!">✓</div>' : ''}
+          <div class="card-front-body">
+            <div class="verb-it">${v.v}</div>
+            <div class="verb-hint">tap to reveal conjugations</div>
+            ${auxLabel(v.a)}
+            <div class="flip-hint">click · space · tap</div>
+          </div>
+        </div>
+
+        <div class="card-face card-back">
+          <div class="card-stripe ${sc}"></div>
+          <div class="card-tag">
+            <span>${tagLabel(v.a)}</span>
+            <span>Conjugations</span>
+          </div>
+          <div class="card-back-body">
+            <div class="back-top">
+              <div>
+                <div class="verb-en">${v.v} = ${v.e}</div>
+                ${auxLabel(v.a)}
+              </div>
+            </div>
+            <div class="tense-label">Presente</div>
+            <div class="conj-grid">${presRows}</div>
+            <div class="ex-line">${v.exIt} — ${v.exEn}</div>
+            <div class="tense-label">Passato Prossimo</div>
+            <div class="conj-grid">${ppRows}</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn ghost" onclick="prevCard()" title="← Prev">← Prev</button>
+      <button class="nav-btn secondary" onclick="flipCard()" title="Space">↔ Flip</button>
+      <button class="nav-btn green" onclick="markKnown()" title="K">✓ Known</button>
+      <button class="nav-btn primary" onclick="nextCard()" title="→ Next">Next →</button>
+    </div>
+
+    <div class="nav-counter">${state.idx+1} / ${state.deck.length}</div>
+
+    <div class="kbd-hints">
+      <div class="kbd-hint"><kbd class="kbd">←</kbd> Prev</div>
+      <div class="kbd-hint"><kbd class="kbd">→</kbd> Next</div>
+      <div class="kbd-hint"><kbd class="kbd">Space</kbd> Flip</div>
+      <div class="kbd-hint"><kbd class="kbd">K</kbd> Known</div>
+    </div>
+  `;
+}
+
+function flipCard() {
+  state.flipped = !state.flipped;
+  const card = document.querySelector('.card');
+  if (card) card.classList.toggle('flipped', state.flipped);
+}
+
+function nextCard() {
+  state.navDir = 'left';
+  state.flipped = false;
+  state.idx = (state.idx + 1) % state.deck.length;
+  render();
+}
+
+function prevCard() {
+  state.navDir = 'right';
+  state.flipped = false;
+  state.idx = (state.idx - 1 + state.deck.length) % state.deck.length;
+  render();
+}
+
+function markKnown() {
+  const v = state.deck[state.idx];
+  if (!state.known.has(v.v)) {
+    state.known.add(v.v);
+    state.score += 5;
+    state.streak++;
+    showStreakToast(state.streak);
+    if (state.known.size === state.deck.length) launchConfetti();
+  }
+  nextCard();
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function generateQuiz() {
+  const v = state.deck[state.idx];
+  if (!v) return;
+  state.quizTense = Math.random() < 0.5 ? 'pres' : 'pp';
+  const pronIdx = Math.floor(Math.random() * 6);
+  state.quizPronIdx = pronIdx;
+
+  let correct;
+  if (state.quizTense === 'pres') correct = v.pres[pronIdx];
+  else correct = buildPPRows(v)[pronIdx].form;
+  state.quizCorrectAns = correct;
+
+  const others = state.deck.filter(x => x.v !== v.v).sort(() => Math.random()-0.5).slice(0,3);
+  let opts = others.map(ov => state.quizTense === 'pres' ? ov.pres[pronIdx] : buildPPRows(ov)[pronIdx].form);
+  opts.push(correct);
+  for (let i = opts.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [opts[i],opts[j]] = [opts[j],opts[i]];
+  }
+  state.quizOpts = opts;
+  state.quizCorrectIdx = opts.indexOf(correct);
+  state.quizPhase = 'question';
+  state.quizSelected = -1;
+}
+
+function renderQuiz() {
+  const v = state.deck[state.idx];
+  if (!v) return;
+  const pron = PRONOUNS[state.quizPronIdx];
+  const tenseLabel = state.quizTense === 'pres' ? 'Presente' : 'Passato Prossimo';
+
+  const optsHtml = state.quizOpts.map((opt, i) => {
+    let cls = 'quiz-opt';
+    if (state.quizPhase === 'answered') {
+      cls += ' disabled';
+      if (i === state.quizCorrectIdx) cls += ' correct';
+      else if (i === state.quizSelected && i !== state.quizCorrectIdx) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="selectAnswer(${i})">${opt}</button>`;
+  }).join('');
+
+  let feedbackHtml = '';
+  if (state.quizPhase === 'answered') {
+    const correct = state.quizSelected === state.quizCorrectIdx;
+    feedbackHtml = `<div class="quiz-feedback ${correct?'good':'bad'}">
+      ${correct ? '🎉 Correct! +10 points' : `❌ Correct answer: <strong>${state.quizCorrectAns}</strong>`}
+    </div>`;
+  }
+
+  document.getElementById('main').innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-header">
+        <div class="quiz-title">${v.v}</div>
+        <div class="quiz-sub">${v.e} &nbsp;·&nbsp; ${tagLabel(v.a)}</div>
+      </div>
+      <div class="quiz-body">
+        <div class="quiz-question">
+          Conjugate <strong>${v.v}</strong> in the <strong>${tenseLabel}</strong> for: <strong>${pron}</strong>
+        </div>
+        <div class="quiz-opts">${optsHtml}</div>
+        ${feedbackHtml}
+      </div>
+    </div>
+    <div class="nav-row">
+      ${state.quizPhase === 'answered' ? `<button class="nav-btn primary" onclick="nextQuiz()">Next Question →</button>` : ''}
+    </div>
+    <div class="nav-counter">${state.idx+1} / ${state.deck.length}</div>
+  `;
+}
+
+function selectAnswer(i) {
+  if (state.quizPhase !== 'question') return;
+  state.quizSelected = i;
+  state.quizPhase = 'answered';
+  if (i === state.quizCorrectIdx) {
+    state.score += 10; state.streak++;
+    showStreakToast(state.streak);
+  } else {
+    state.streak = 0;
+  }
+  render();
+}
+
+function nextQuiz() {
+  state.idx = (state.idx + 1) % state.deck.length;
+  state.flipped = false;
+  generateQuiz();
+  render();
+}
+
+// ============================================================
+// MATCH
+// ============================================================
+function generateMatch() {
+  const subset = [...state.deck].sort(() => Math.random()-0.5).slice(0,8);
+  const its = subset.map((v,i) => ({id:i,    text:v.v, type:'it', match:i}));
+  const ens = subset.map((v,i) => ({id:i+100, text:v.e, type:'en', match:i})).sort(() => Math.random()-0.5);
+  state.matchPairs = subset;
+  state.matchCards = [...its, ...ens];
+  state.matchSelected = null;
+  state.matchDone = new Set();
+  state.matchWrong = new Set();
+}
+
+function renderMatch() {
+  const its = state.matchCards.filter(c => c.type==='it');
+  const ens = state.matchCards.filter(c => c.type==='en');
+
+  let html = `<div class="match-header">Match the Italian verb to its English meaning</div>`;
+  html += `<div class="match-grid">`;
+  html += `<div class="match-col-label">Italiano</div>`;
+  html += `<div class="match-col-label">English</div>`;
+
+  its.forEach((it, i) => {
+    const en = ens[i];
+    const itM = state.matchDone.has(it.match), enM = state.matchDone.has(en.match);
+    const itS = state.matchSelected && state.matchSelected.id === it.id;
+    const enS = state.matchSelected && state.matchSelected.id === en.id;
+    const itW = state.matchWrong && state.matchWrong.has(it.id);
+    const enW = state.matchWrong && state.matchWrong.has(en.id);
+    html += `<div class="match-card${itM?' matched':''}${itS?' selected':''}${itW?' wrong-flash':''}" onclick="selectMatch(${it.id})">${it.text}</div>`;
+    html += `<div class="match-card${enM?' matched':''}${enS?' selected':''}${enW?' wrong-flash':''}" onclick="selectMatch(${en.id})">${en.text}</div>`;
+  });
+  html += `</div>`;
+
+  if (state.matchDone.size === state.matchPairs.length) {
+    html += `<div class="nav-row" style="margin-top:20px">
+      <div style="text-align:center;color:var(--green);font-weight:700;font-size:1.1rem;width:100%;margin-bottom:12px">🎉 Round complete!</div>
+      <button class="nav-btn primary" onclick="newMatch()">🔀 New Round</button>
+    </div>`;
+    launchConfetti();
+  }
+
+  document.getElementById('main').innerHTML = html;
+}
+
+function selectMatch(id) {
+  const card = state.matchCards.find(c => c.id === id);
+  if (!card || state.matchDone.has(card.match)) return;
+  if (!state.matchSelected) { state.matchSelected = card; render(); return; }
+  const prev = state.matchSelected;
+  state.matchSelected = null;
+  if (prev.id === id) { render(); return; }
+  if (prev.type !== card.type && prev.match === card.match) {
+    state.matchDone.add(card.match);
+    state.score += 5; state.streak++;
+    showStreakToast(state.streak);
+  } else {
+    state.matchWrong = new Set([prev.id, id]);
+    state.streak = 0;
+    setTimeout(() => { state.matchWrong = new Set(); render(); }, 450);
+  }
+  render();
+}
+
+function newMatch() { generateMatch(); render(); }
+
+// ============================================================
+// KEYBOARD
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (state.mode === 'flashcard') {
+    if (e.key === 'ArrowRight') nextCard();
+    else if (e.key === 'ArrowLeft') prevCard();
+    else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+    else if (e.key === 'k' || e.key === 'K') markKnown();
+  }
+});
+
+// ============================================================
+// TOUCH SWIPE
+// ============================================================
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', e => {
+  if (state.mode !== 'flashcard') return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) {
+    if (dx < 0) nextCard();
+    else prevCard();
+  }
+}, {passive:true});
+
+// ============================================================
+// INIT
+// ============================================================
+render();
+</script>
+</body>
+</html>
